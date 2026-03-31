@@ -1,31 +1,35 @@
+import { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import { ChatLayout } from '@/layouts/ChatLayout';
-import { MessageBubble } from '@/features/chat/MessageBubble';
+import { MessageList } from '@/features/chat/MessageList';
 import { PromptInput } from '@/features/chat/PromptInput';
+import { SavedList } from '@/features/saved/SavedList';
+import { SharePage } from '@/pages/SharePage';
+import { useChatStore } from '@/store/useChatStore';
 
 function App() {
+  const [view, setView] = useState<'chat' | 'saved'>('chat');
+  const { conversations, activeId } = useChatStore();
+  const activeConversation = conversations.find((c) => c.id === activeId);
+
   return (
-    <ChatLayout>
-      <div className="flex-1 overflow-y-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto space-y-8">
-          <MessageBubble 
-            sender="assistant" 
-            content="Welcome to PromptFlow AI! How can I assist you with your SaaS project today?" 
-            timestamp="JUST NOW"
-          />
-          <MessageBubble 
-            sender="user" 
-            content="Hi, I need help setting up a scalable React application using Tailwind CSS v3." 
-            timestamp="1 MIN AGO"
-          />
-          <MessageBubble 
-            sender="assistant" 
-            content="Perfect choice! I've already initialized your project with Tailwind v3, PostCSS, and a robust folder structure. Your setup is now production-ready with absolute imports and a dark theme by default." 
-            timestamp="NOW"
-          />
-        </div>
-      </div>
-      <PromptInput />
-    </ChatLayout>
+    <Routes>
+      <Route path="/" element={
+        <ChatLayout setView={setView} activeView={view}>
+          {view === 'chat' ? (
+            <>
+              <MessageList conversation={activeConversation} />
+              <PromptInput />
+            </>
+          ) : (
+            <div className="flex-1 overflow-hidden p-6">
+              <SavedList />
+            </div>
+          )}
+        </ChatLayout>
+      } />
+      <Route path="/share/:id" element={<SharePage />} />
+    </Routes>
   );
 }
 
