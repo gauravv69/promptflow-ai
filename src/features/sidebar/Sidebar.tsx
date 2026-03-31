@@ -2,6 +2,7 @@ import { Plus, MessageSquare, Settings, LogOut, Trash2, Layers, Bookmark, X } fr
 import type { Dispatch, SetStateAction } from 'react';
 import { cn } from '@/lib/utils';
 import { useChatStore } from '@/store/useChatStore';
+import { useAuthStore } from '@/store/useAuthStore';
 import { AnalyticsPanel } from '@/features/analytics/AnalyticsPanel';
 
 interface SidebarProps {
@@ -12,6 +13,7 @@ interface SidebarProps {
 
 export const Sidebar = ({ setView, activeView, onClose }: SidebarProps) => {
   const { conversations, activeId, setActiveChat, createNewChat, deleteChat } = useChatStore();
+  const logout = useAuthStore((state) => state.logout);
 
   const handleAction = (callback: () => void) => {
     callback();
@@ -122,9 +124,12 @@ export const Sidebar = ({ setView, activeView, onClose }: SidebarProps) => {
           <Settings size={18} />
           <span>Config</span>
         </button>
-        <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-neutral-600 hover:text-red-400 hover:bg-red-500/5 transition-all text-sm font-medium">
+        <button 
+          onClick={() => handleAction(logout)}
+          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-neutral-600 hover:text-red-400 hover:bg-red-500/5 transition-all text-sm font-medium"
+        >
           <LogOut size={18} />
-          <span>Dismiss</span>
+          <span>Dismiss Session</span>
         </button>
       </div>
     </aside>
