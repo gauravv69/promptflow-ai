@@ -3,11 +3,66 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-white text-neutral-900 transition-colors duration-300;
+  :root {
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --accent: 59, 130, 246; /* blue-500 */
+    --accent-glow: rgba(59, 130, 246, 0.15);
   }
-  
-  .dark body {
-    @apply bg-neutral-950 text-neutral-50;
+
+  body {
+    @apply bg-[#030303] text-neutral-200 antialiased selection:bg-blue-500/30 selection:text-blue-200;
+    font-feature-settings: "cv02", "cv05", "cv11", "ss01";
+  }
+
+  /* Custom Scrollbar for a more premium look */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-neutral-800 rounded-full hover:bg-neutral-700 transition-colors;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/[0.02] backdrop-blur-2xl border border-white/[0.05] shadow-[0_8px_32px_0_rgba(0,0,0,0.37)];
+  }
+
+  .glass-card {
+    @apply glass rounded-3xl transition-all duration-500 hover:border-white/[0.1] hover:bg-white/[0.04];
+  }
+
+  .text-glow {
+    text-shadow: 0 0 15px rgba(var(--accent), 0.5);
+  }
+
+  .bg-mesh {
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(var(--accent), 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.1) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.05) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(var(--accent), 0.1) 0px, transparent 50%);
+  }
+}
+
+.animate-in {
+  animation: animate-in 0.5s ease-out forwards;
+}
+
+@keyframes animate-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
